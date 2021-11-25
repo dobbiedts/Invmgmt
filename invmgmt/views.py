@@ -23,7 +23,7 @@ def add_invoice(request):
     form  = InvoiceForm(request.POST or None)
     total_invoice = Invoice.objects.count()
     #slicer
-    recent_invoice = Invoice.objects.order_by('invoice_date')[:6]
+    recent_invoice = Invoice.objects.order_by('-invoice_date')[:6]
     if form.is_valid():
         form.save()
         messages.success(request, 'Successfully Saved')
