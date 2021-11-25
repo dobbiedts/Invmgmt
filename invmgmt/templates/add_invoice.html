@@ -20,8 +20,10 @@
 {% include 'navbar.html' %} 
 <body>
    <div class = "row px-5">
-	  <div class="col-sm-9">
-    <form method='POST' action=''>{% csrf_token %}
+   <div class="col-sm-1"></div>
+	  <div class="col-sm-8">
+    <form method='POST' action='' class="mt-5">
+    {% csrf_token %}
         <div class="row" >
           
                 
@@ -141,7 +143,7 @@
                     {{ form.line_eight_total_price|as_crispy_field }}
                  </div>
               
-                 <button id='more-line' type="button" class="btn btn-primary">Show / Hide More Lines</button>
+                 <button id='more-line' type="button" class="btn btn-primary ml-3 mb-2">Show / Hide More Lines</button>
                   <div class="form-group col-md-12">
                     {{ form.invoice_type|as_crispy_field }}
                   </div>
@@ -150,7 +152,7 @@
                   </div>
               
 
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary ml-3">Save</button>
 
                 <!-- <input type="submit" value='Submit'/>   -->
 
@@ -159,11 +161,11 @@
        </form>
       </div><!-- End myform -->
 
-       <div class="col-sm-3">
+       <div class="col-sm-3 mt-3">
 	        <div>
-	          <div>
+	          <div class="mb-3">
 	            <span class="text-muted">Recent invoices</span>
-	            <span class="badge badge-secondary badge-pill">{{total_invoice}}</span>
+	            <span class="badge badge-primary badge-pill">{{total_invoice}}</span>
 	          </div>
 	          {% for instance in recent_invoice %}
 	          <ul class="list-group mb-3  shadow">

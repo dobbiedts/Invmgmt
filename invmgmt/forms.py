@@ -1,7 +1,11 @@
 from .models import Invoice
 from django import forms
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
 class InvoiceForm(forms.ModelForm):
+    entry_date = forms.DateTimeField(required=False, widget = DateInput)
     class Meta:
         model = Invoice
         fields = ['name', 'phone_number', 'invoice_date','invoice_number',
@@ -15,7 +19,7 @@ class InvoiceForm(forms.ModelForm):
 				'line_eight', 'line_eight_quantity', 'line_eight_unit_price', 'line_eight_total_price',
 				'line_nine', 'line_nine_quantity', 'line_nine_unit_price', 'line_nine_total_price',
 				'line_ten', 'line_ten_quantity', 'line_ten_unit_price', 'line_ten_total_price',
-				'total', 'paid', 'invoice_type',
+				'total', 'paid', 'invoice_type', 'entry_date'
 				]
     def clean_invoice_number(self):
         invoice_number = self.cleaned_data.get('invoice_number')
@@ -31,9 +35,9 @@ class InvoiceForm(forms.ModelForm):
         
 
 
-
 class InvoiceSearchForm(forms.ModelForm):
     generate_invoice = forms.BooleanField(required=False)
+    
     class Meta:
         model = Invoice
         fields = ['invoice_number', 'name', 'generate_invoice']
