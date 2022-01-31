@@ -355,7 +355,7 @@ def update_invoice(request, pk):
             form.save()
             return redirect('/list_invoice')
         
-        context = {
+    context = {
 	    'form':form
 	}
     
