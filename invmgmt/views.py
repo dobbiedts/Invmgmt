@@ -194,6 +194,7 @@ def list_invoice(request):
                 line_ten, line_ten_quantity, line_ten_unit_price, line_ten_total_price, 
                 total, phone_number, invoice_date, invoice_type, pdf_file_name):
                 c = canvas.Canvas(pdf_file_name)
+                print(c)
                 #logo = 'static\img\DTS_logo.jpg' 
                 #c.drawImage(logo, 50, 700, width=500, height=120)
                 c.setFont('Helvetica', 12, leading=None)
