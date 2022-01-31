@@ -27,6 +27,15 @@ body{
 	box-shadow: 12px 12px 12px #e61c66;
 	text-align: center;
 }
+
+.error{
+	list-style: none;
+	background-color: #52b6b9;
+	color: white;
+	box-shadow: 12px 12px 12px #b66784;
+	text-align: center;
+}
+
 .myForm form{
 	box-shadow: 10px 10px 10px;
 	box-shadow: 12px 12px 12px #2e6da4;

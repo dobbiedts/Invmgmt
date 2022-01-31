@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import InvoiceForm, InvoiceSearchForm, InvoiceUpdateForm
+from .forms import InvoiceForm, InvoiceSearchForm, InvoiceUpdateForm, NewUserForm
 from .models import Invoice
 from django.contrib import messages
 from reportlab.pdfgen import canvas
@@ -7,18 +7,67 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.pagesizes import landscape
 from reportlab.platypus import Image
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.forms import AuthenticationForm
 
 
 # Create your views here.
+def register_request(request):
+    
+    if request.method == "POST":
+        form = NewUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            messages.success(request, 'Registration successful.' )
+            return redirect('/list_invoice')
+        messages.error(request, 'Unsuccessful registration. Invalid information.')
+        
+    else:
+        form = NewUserForm()
+    context= {
+             "register_form" : form,
+        }
+    return render (request, 'register.html', context)
+
+def login_request(request):
+    if request.method == "POST":
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f"You are now logged in as {username}.")
+                return redirect('/list_invoice')
+            else:
+                messages.error(request, 'Invalid username or password.')
+        else:
+            messages.error(request, 'Invalid username or password.')
+    form = AuthenticationForm()
+    context={
+        "login_form":form
+        }
+    return render(request, 'login.html', context)
+
+def logout_request(request):
+    logout(request)
+    if logout:
+        messages.success(request, 'You have successfully logged out.') 
+    return redirect('/login')
 
 def home(request):
-    title = 'MANAGEMENT'
+    title = 'InvMgmt'
     context = {
         'title' : title,
     }
     return render (request, 'home.html', context)
 
-@login_required
+@login_required(login_url='/login')
 def add_invoice(request):
     form  = InvoiceForm(request.POST or None)
     total_invoice = Invoice.objects.count()
@@ -36,7 +85,7 @@ def add_invoice(request):
     }
     return render(request, "add_invoice.html", context)
 
-@login_required
+@login_required(login_url='/login')
 def list_invoice(request):
     title = "INVOICE LIST"
     queryset = Invoice.objects.all()
@@ -295,23 +344,24 @@ def list_invoice(request):
          }
     return render (request, "list_item.html", context)
 
-@login_required
+@login_required(login_url='/login')
 def update_invoice(request, pk):
     queryset = Invoice.objects.get(id=pk)
     form = InvoiceUpdateForm(instance=queryset)
     if request.method == 'POST':
-	    form = InvoiceUpdateForm(request.POST, instance=queryset)
-	    if form.is_valid():
-		    form.save()
-		    return redirect('/list_invoice')
-
-    context = {
+        form = InvoiceUpdateForm(request.POST, instance=queryset)
+        if form.is_valid():
+            form.save()
+            return redirect('/list_invoice')
+        
+        context = {
 	    'form':form
 	}
+    
     return render(request, 'add_invoice.html', context)
 
 
-@login_required
+@login_required(login_url='/login')
 def delete_invoice(request, pk):
     queryset = Invoice.objects.get(id=pk)
     if request.method == 'POST':
