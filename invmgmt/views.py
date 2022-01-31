@@ -349,6 +349,9 @@ def list_invoice(request):
 def update_invoice(request, pk):
     queryset = Invoice.objects.get(id=pk)
     form = InvoiceUpdateForm(instance=queryset)
+    total_invoice = Invoice.objects.count()
+    #slicer
+    recent_invoice = Invoice.objects.order_by('-invoice_date')[:6]
     if request.method == 'POST':
         form = InvoiceUpdateForm(request.POST, instance=queryset)
         if form.is_valid():
@@ -356,7 +359,9 @@ def update_invoice(request, pk):
             return redirect('/list_invoice')
         
     context = {
-	    'form':form
+	    'form':form,
+        "total_invoice" : total_invoice,
+        "recent_invoice": recent_invoice,
 	}
     
     return render(request, 'add_invoice.html', context)
